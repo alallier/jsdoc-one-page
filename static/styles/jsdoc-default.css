@@ -101,7 +101,7 @@ nav ul {
     font-family: 'Lucida Grande', 'Lucida Sans Unicode', arial, sans-serif;
     font-size: 100%;
     line-height: 17px;
-    padding: 0;
+    padding-bottom: 4px;
     margin: 0;
     list-style-type: none;
 }
