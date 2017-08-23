@@ -86,7 +86,7 @@ function linkTo(config){
     return htmlsafe(longname);
   } else {
     var link = allLinks[longname];
-    return '<a href="#' + link + '">' + htmlsafe(name) + '</a>';
+    return htmlsafe(name);
   }
 }
 
