@@ -467,7 +467,7 @@ function buildMemberNav(items, itemHeading, itemsSeen) {
  * @return {string} The HTML for the navigation sidebar.
  */
 function buildNav(members) {
-  var nav = '<h2><a href="index.html">Home</a></h2>';
+  var nav = '';
   var seen = {};
 
   nav += buildMemberNav(members.modules, 'Modules', {});
