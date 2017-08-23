@@ -440,6 +440,8 @@ function buildMemberNav(items, itemHeading, itemsSeen) {
           nav += '<li>' + item.name + '.js' + '</li>';
         }
       }
+
+      nav += '</ul>';
     }
     else {
       items.forEach(function(item) {
