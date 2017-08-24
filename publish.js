@@ -412,11 +412,15 @@ function buildMemberNav(items, itemHeading, itemsSeen) {
 
         if (directoryCheck) {
           if (lastGroup !== directory) {
+            if (lastGroup !== '') {
+              nav += '</ul>';
+            }
+
             lastGroup = directory;
 
             directory = directory.charAt(0).toUpperCase() + directory.slice(1) // Uppercase first letter of directory name
 
-            nav += '<h3>' + directory + '</h3>';
+            nav += '<h3>' + directory + '</h3><ul>';
           }
 
           itemNameSpliced = item.name.substring(item.name.split('/')[0].length).slice(1) + '.js';
@@ -425,13 +429,19 @@ function buildMemberNav(items, itemHeading, itemsSeen) {
         }
         else {
           if (lastGroup !== 'root') {
+            if (lastGroup !== '') {
+              nav += '</ul>';
+            }
+
             lastGroup = 'root';
 
-            nav += '<h3>Root</h3>';
+            nav += '<h3>Root</h3><ul>';
           }
           nav += '<li>' + item.name + '.js' + '</li>';
         }
       }
+
+      nav += '</ul>';
     }
     else {
       items.forEach(function(item) {

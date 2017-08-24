@@ -72,7 +72,8 @@ tt, code, kbd, samp {
 section {
     display: block;
     background-color: #fff;
-    padding: 12px 24px;
+    padding-top: 4px;
+    padding-bottom: 4px;
     border-bottom: 1px solid #ccc;
     margin-right: 30px;
 }
@@ -91,17 +92,16 @@ section {
 nav {
     display: block;
     margin-top: 28px;
-    width: 30%;
     box-sizing: border-box;
-    border-left: 1px solid #ccc;
-    padding-left: 16px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 32px
 }
 
 nav ul {
     font-family: 'Lucida Grande', 'Lucida Sans Unicode', arial, sans-serif;
     font-size: 100%;
     line-height: 17px;
-    padding: 0;
+    padding-bottom: 4px;
     margin: 0;
     list-style-type: none;
 }
