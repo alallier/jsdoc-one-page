@@ -86,7 +86,7 @@ function linkTo(config){
     return htmlsafe(longname);
   } else {
     var link = allLinks[longname];
-    return '<a href="#' + link + '">' + htmlsafe(name) + '</a>';
+    return htmlsafe(name);
   }
 }
 
@@ -500,7 +500,7 @@ function buildNav(members) {
 
     if (!globalNav) {
       // turn the heading into a link so you can actually get to the global page
-      nav += '<h3>' + linkTo('Global') + '</h3>';
+      nav += '<h3>Global</h3>';
     }
     else {
       nav += '<h3>Global</h3><ul>' + globalNav + '</ul>';
@@ -520,6 +520,7 @@ exports.publish = function(taffyData, opts, tutorials) {
 
   var conf = env.conf.templates || {};
   conf.default = conf.default || {};
+  var outputSourceFiles;
 
   var templatePath = path.normalize(opts.template);
   view = new template.Template( path.join(templatePath, 'tmpl') );
@@ -705,6 +706,9 @@ exports.publish = function(taffyData, opts, tutorials) {
   });
 
   var members = helper.getMembers(data);
+  
+  // output pretty-printed source files by default
+  outputSourceFiles = conf.default && conf.default.outputSourceFiles !== false;
 
   // add template helpers
   view.find = find;
@@ -714,6 +718,7 @@ exports.publish = function(taffyData, opts, tutorials) {
   view.generateLink = generateLink;
   view.linkTo = linkTo;
   view.linkToType = linkToType;
+  view.outputSourceFiles = outputSourceFiles;
 
   // once for all
   nav = buildNav(members);
