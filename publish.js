@@ -49,9 +49,16 @@ function saveOutputFileContent() {
   var header = fs.readFileSync(__dirname + '/tmpl/header.tmpl', 'utf-8');
   var footer = fs.readFileSync(__dirname + '/tmpl/footer.tmpl', 'utf-8');
 
+  // Grab the global data so we can insert it where we want (at the end)
+  var globalData = otherApiHtmlData[0];
+
+  // Remove the global data from the array so it is no displayed twice
+  otherApiHtmlData.shift();
+
   var apiContentOnlyHtml = homeHtmlData.concat(
     otherApiHtmlData,
-    classHtmlData
+    classHtmlData,
+    globalData
   ).join('\n');
 
   var singlePageApiHtml = [header].concat(
