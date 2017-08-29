@@ -36,7 +36,7 @@ var otherApiHtmlData = [];
 function updateOutputFileContent(html, title, filename){
   var trimHtml = html.replace(/(\s|\t)+(\n)+(\s|\t)+/g, '\n').trim();
 
-  if(title.match(/home/i)){
+  if(title.match(/Home/)){
     homeHtmlData.push(trimHtml);
   } else if(title.match(/^class/i)){
     classHtmlData.push(trimHtml);
@@ -50,8 +50,8 @@ function saveOutputFileContent() {
   var footer = fs.readFileSync(__dirname + '/tmpl/footer.tmpl', 'utf-8');
 
   var apiContentOnlyHtml = homeHtmlData.concat(
-    classHtmlData,
-    otherApiHtmlData
+    otherApiHtmlData,
+    classHtmlData
   ).join('\n');
 
   var singlePageApiHtml = [header].concat(
@@ -511,6 +511,32 @@ function buildNav(members) {
 }
 
 /**
+ * Sorts array of objects by property in either ascending or descending order
+ * @param {string} property - Object property to sort by. Specify a `-` to sort in descending order
+ * @return {Function}  JS compliant {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort sort function}
+ */
+function dynamicSort(property) {
+  var sortOrder = 1;
+  if (property[0] === '-') {
+    sortOrder = -1;
+    property = property.substr(1);
+  }
+
+  /**
+   * Sorts two element by object property.
+   * This conforms to a proper {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort JS sort function}.
+   * @function  compare
+   * @param {Object} a - Element of array
+   * @param {Object} b - Element of array
+   * @return {number} - Returns less than 0 [sort a > b], 0 [a = b], or greater than 0 [a < b];
+   */
+  return function compare (a, b) {
+    var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+    return result * sortOrder;
+  };
+};
+
+/**
  @param {TAFFY} taffyData See <http://taffydb.com/>.
  @param {object} opts
  @param {Tutorial} tutorials
@@ -706,7 +732,7 @@ exports.publish = function(taffyData, opts, tutorials) {
   });
 
   var members = helper.getMembers(data);
-  
+
   // output pretty-printed source files by default
   outputSourceFiles = conf.default && conf.default.outputSourceFiles !== false;
 
@@ -746,11 +772,38 @@ exports.publish = function(taffyData, opts, tutorials) {
   var externals = taffy(members.externals);
   var interfaces = taffy(members.interfaces);
 
-  Object.keys(helper.longnameToUrl).forEach(function(longname) {
-    var myModules = helper.find(modules, {longname: longname});
+  var sortable = [];
+
+  // Add modules to array, so we can sort and generate them in order (so that it will match table of contents)
+  for (module1 in helper.longnameToUrl) {
+    var myModules = helper.find(modules, {longname: module1});
+
     if (myModules.length) {
-      generate('Module: ' + myModules[0].name, myModules, helper.longnameToUrl[longname]);
+      sortable.push(myModules[0])
     }
+  }
+
+  // Sort array of modules by longname
+  sortable.sort(dynamicSort('longname'));
+
+  // Loop through sorted modules and generate the documentation for each module
+  for (var i = 0; i < sortable.length; i++) {
+    var testArray = [];
+
+    myModules = sortable[i];
+
+    // Need to push the module to a dummy array to simulate the original API below
+    testArray.push(myModules);
+
+    generate('Module: ' + myModules.name, testArray, helper.longnameToUrl[myModules.longname]);
+  }
+
+  Object.keys(helper.longnameToUrl).forEach(function(longname) {
+    // Removed in favor of sorted modules generation (above)
+    // var myModules = helper.find(modules, {longname: longname});
+    // if (myModules.length) {
+      // generate('Module: ' + myModules[0].name, myModules, helper.longnameToUrl[longname]);
+    // }
 
     var myClasses = helper.find(classes, {longname: longname});
     if (myClasses.length) {
