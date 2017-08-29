@@ -56,9 +56,9 @@ function saveOutputFileContent() {
   otherApiHtmlData.shift();
 
   var apiContentOnlyHtml = homeHtmlData.concat(
-    otherApiHtmlData,
-    classHtmlData,
-    globalData
+    otherApiHtmlData, // Modules
+    classHtmlData, // Classes
+    globalData // Global
   ).join('\n');
 
   var singlePageApiHtml = [header].concat(
